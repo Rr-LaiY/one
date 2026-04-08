@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: monospace;
+            padding: 40px;
+        }
+
+        .panel {
+            width: 300px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            position: relative;
+        }
+
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            border-left: 2px solid white;
+            border-top: 2px solid white;
+        }
+
+        .panel-title {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 12px;
+            background: #0a0a0a;
+            padding: 2px 8px;
+        }
+
+        .panel p {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel">
+        <div class="panel-title">PROFILE</div>
+        <p>Rr_LaiY</p>
+        <p>personal terminal</p>
+    </div>
+</body>
+</html>
