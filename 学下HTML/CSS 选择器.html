@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS选择器</title>
+    <style>
+        /*元素选择器，选择所有的h2元素*/
+        h2 {
+            color: blue;
+        }
+        /*h3{
+            background-color: green;
+        }*/
+        /*类选择器，选择所有具有a1类的元素*/
+        .a1 {
+            background-color: red;
+        }
+        /*id选择器，选择具有id为2的元素*/
+        #2 {
+            background-color: yellow;
+            font-size: 30px;
+        }
+        /*通用选择器，选择所有元素*/
+        * {
+            font-family: "微软雅黑";
+        } 
+        /*子元素选择器*/
+        .father > .son {
+            color: rgb(143, 212, 63);
+            font-size: 20px;
+        }
+        /*后代选择器*/
+        .father p {
+            color: rgb(63, 143, 212);
+            font-size: 20px;
+        }
+        /*相邻兄弟选择器，选择紧接在h3后面的p元素*/
+        h3 + p {
+            color: rgb(212, 63, 143);
+            font-size: 20px;
+        }
+        /*伪类选择器，选择鼠标悬停在h1元素上的状态*/
+        #element:hover {
+            color: rgb(63, 212, 143);
+            font-size: 30px;
+        }
+        /*选中第一个子元素：first-child
+
+        */
+    </style>
+</head>
+<body>
+    <h1>不同类型的CSS选择器</h1>
+    <h2>元素选择器示例</h2>
+    <h3 class="a1">类选择器示例</h3>
+    <h3>另一个类选择器示例</h3>
+    <h4 id="2">这是个id选择器</h4>
+    <div class="father">父元素
+        <p class="son">子元素示例</p>
+        <div>
+            <p class="grandson">后代选择器示例</p>
+        </div>
+    </div>
+    <p>只是一个p标签</p>
+    <h3>相邻兄弟选择器示例</h3>
+    <p>另一个相邻的p标签</p>
+    <h3 id="element">伪类选择器示例</h3>
+</body>
+</html>

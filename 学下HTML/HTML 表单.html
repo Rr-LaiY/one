@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 表单</title>
+</head>
+<body>
+    <h1>HTML 表单</h1>
+    <form action="/submit" method="post">
+        <span>名字:</span>
+        <label for="name">姓名:</label>
+        <input type="text" placeholder="请输入姓名" id="name" name="name"><br><br>
+
+        <label for="email">邮箱:</label>
+        <input type="email" placeholder="请输入邮箱" id="email" name="email"><br><br>
+
+        <label for="password">密码:</label>
+        <input type="password" placeholder="请输入密码" id="password" name="password"><br><br>
+        
+        <label for="gender">性别:</label>
+        <input type="radio" id="male" name="gender" value="male">
+        <label for="male">男</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female">女</label>
+        <input type="radio" id="other" name="gender" value="other">
+        <label for="other">其他</label><br><br>
+
+        <input type="submit" value="提交">
+        
+    </form>
+
+    
+</body>
+</html>

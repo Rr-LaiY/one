@@ -23,7 +23,8 @@ def game1 (start, end, times):
             return False
 while True:
 
-    result = game1(1,20,9)
+    #result = game1(1,20,9)
+    result = game1(int(input("Enter the start of the range: ")), int(input("Enter the end of the range: ")), int(input("Enter the number of times you want to guess: ")))
     if result:
         print("you win")
     else:
