@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS盒子模型</title>
+    <style>
+        
+        .border_demo{
+            width: 200px;
+            height: 100px;
+            background-color: aqua;
+            border-style: dashed solid dotted double;
+            border-width: 7px 10px 5px 3px;
+            border-color: blueviolet burlywood black red;
+        }
+        .demo{
+            display: inline-block;
+            font-size: 20px;
+            /* width: 200px;
+            height: 100px; */
+            background-color: aqua;
+            border: 5px solid /*实线/dashed,虚线/dotted,点线/double,双实线*/ black;
+            padding: 50px;
+            margin: 50px;
+        }
+        .border_demo_0{
+            width: 200px;
+            height: 100px;
+            /*background-color: aqua;*/
+            border-left: 5px dashed red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="demo" id="a">这里是莱茵Rr.LaiY</div>
+    <div class="border_demo">一个边框示例</div>
+    <div class="border_demo_0">另一个边框示例</div>
+</body>
+</html>

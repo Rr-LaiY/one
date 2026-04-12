@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSS常用属性</title>
+    <style>
+        .block{
+            background-color: aqua;
+            width: 200px;
+            height: 100px;
+        }
+        .inline{
+            background-color: antiquewhite;
+        }
+        .inline_photo{
+            width: 100px;
+            height: 75px;
+        }
+        .div_inline{
+            display: inline;
+            background-color: blueviolet;
+        }
+        .span_inline_block{
+            display: inline-block;
+            background-color: burlywood;
+            width: 200px;
+            height: 100px;
+        }
+
+
+    </style>
 </head>
 <body>
-    
+    <h1 style="font:bolder 40px 'kaiti'">font 复合属性示例</h1>
+    <p  style="line-height: 20px">一段长长————————————————————————————————————————————————————————————————————————————————————————————————————————————————————文本</p>
+    <div class="block">块级元素</div>
+    <span class="inline">行内元素</span>
+    <img src="D:\fvv，你真得学点东西了\F_LaiY.png" alt="图片没了" class="inline_photo">
+    <h2>display</h2>
+    <div class="div_inline" >一个div标签转换的行内元素</div>
+    <span class="span_inline_block" >一个span标签，转换为行内块元素，与行内元素的区别是可以设置宽高</span>
 </body>
 </html>

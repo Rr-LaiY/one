@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS浮动</title>
+    <style>
+        .father{
+            /* width: 500px;
+            height: 200px; */
+            /* 父元素没有高度导致坍塌 */
+            background-color: aqua;
+            border: 3px solid black;
+            /* overflow: hidden; 解决父元素高度坍塌问题的办法之一，设置overflow属性为hidden，强制父元素包含浮动子元素的高度 */
+
+        }
+        .father::after{
+            content: "";
+            display: table;
+            clear: both;
+        }
+        .left_son{
+            width: 200px;
+            height: 100px;
+            background-color: blueviolet;
+            float: left;
+        }
+        .right_son{
+            width: 200px;
+            height: 100px;
+            background-color: burlywood;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="father">
+        <div class="left_son">左浮动</div>
+        <div class="right_son">右浮动</div>
+    </div>
+    <p>这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落这是一个段落</p>
+</body>
+</html>
