@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定位</title>
+    <style>
+        .box1{
+            height: 350px;
+            background-color: #2686e0;
+        }
+        .box_normal{
+            width: 100px;
+            height: 100px;
+            background-color: #e02686;
+        }
+        /* 相对定位 */
+        .box_relative{
+            width: 100px;
+            height: 100px;
+            background-color: #e0e026;
+            position: relative;
+            /* 相对于正常位置向上的偏移，bottom同理 */
+            top: -50px;
+            left: 50px;
+            /* 相对于正常位置向左的偏移，right同理 */
+
+        }
+        .box2{
+            height: 350px;
+            background-color: #2686e0;
+            /* 相对于正常位置的定位 */
+            /* position: relative; */
+        }
+        /* 绝对定位 */
+        .box_absolute{
+            width: 100px;
+            height: 100px;
+            background-color: #4bb8d3;
+            position: absolute;
+            /* 相对于父元素的右边界偏移，left同理 */
+            right: 300px;
+        }
+        /* 固定定位 */
+        .box_fixed{
+            width: 100px;
+            height: 100px;
+            background-color: #d37912;
+            position: fixed;
+            /* 相对于浏览器窗口的右边界偏移，left同理 */
+            right: 50px;
+            top: 50px;
+        }
+
+    </style>
+<body>
+    
+</body>
+    <h1>相对定位</h1>
+    <div class="box1">
+        <div class="box_normal"></div>
+        <div class="box_relative">相对</div>
+        <div class="box_normal"></div>
+    </div>
+    <h1>绝对定位</h1>
+    <div class="box2">
+        <div class="box_normal"></div>
+        <div class="box_absolute">绝对</div>
+    </div>
+    <h1>固定定位</h1>
+    <div class="box_fixed"></div>
+
+</html>

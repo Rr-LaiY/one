@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 基本语法</title>
+</head>
+<body>
+    <script>
+        var x;
+        let y = 5;
+        const z = 10;
+/*const,常量,不轻易改变，必须初始化，var/let都是变量，var有函数作用域，let有块级作用域*/
+         console.log(x,y,z);
+         let name = "Rr_LaiY";
+        console.log(name);
+        let empty_value = null;
+        console.log(empty_value);
+
+        let age = 18;
+        if (age >= 18) {
+            console.log("成年人");
+        } else {
+            console.log("未成年人");
+        }
+
+        // let time = 10;
+        // if (time < 12) {
+        //     alert("上午");
+        // } else if (time < 18) {
+        //     alert("下午");
+        // } else {
+        //     alert("晚上");
+        // }
+        
+        console.log('这是一个JavaScript基本循环语法的示例！');
+        // for循环语法示例
+        for (let i = 0; i <= 5; i++) {
+            console.log("循环次数: " + i);
+        }
+        // while循环语法示例
+        console.log('while循环'); 
+        let j = 0;
+        while (j <= 5) {
+            console.log("循环次数: " + j);
+            j++;
+        }
+        // continue/break语法示例
+        console.log('break语法');
+        for (let k = 0; k <= 10; k++) {
+            if (k === 3) {
+                continue; // 当k等于3时，跳过本次循环
+            }
+            if (k === 7) {
+                break; // 当k等于7时，退出循环
+            }
+            console.log("循环次数: " + k);
+        }
+    </script>   
+</body>
+</html>
