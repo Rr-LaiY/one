@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 函数</title>
+</head>
+<body>
+    <script>
+        function hello() {
+            console.log("Hello, world!");
+        }
+        hello();
+        function hello_test(name) {
+            return "Hello, " + name + "!";
+        }
+        let a = hello_test();
+        console.log(a);
+        function hello_name(name) {
+            return "Hello, " + name + "!";
+        }
+        let b = hello_name("Rr_LaiY");
+        console.log(b);
+        // 作用域
+        let globalVar = "这是一个全局变量";
+        function localVar_function() {
+            let localVar = "这是一个局部变量";
+            console.log('函数内打印全局变量：' + globalVar); // 可以访问全局变量
+            console.log('函数内打印局部变量：' + localVar); // 可以访问局部变量
+        }
+        localVar_function();
+        console.log('全局打印全局变量：' + globalVar); // 可以访问全局变量
+        console.log('全局打印局部变量：' + localVar); // 报错，无法访问局部变量
+
+    </script>
+    
+</body>
+</html>

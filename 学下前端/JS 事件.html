@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS 事件处理</title>
+</head>
+<body>
+    <!-- <script>
+        // 事件处理示例
+        function handleClick() {
+            alert("按钮被点击了！");
+        }
+    </script>
+    <button onclick="handleClick()">点击我</button> -->
+    <button onclick="click_event()">点一下</button>
+    <input type="text" onfocus="focus_event()" onblur="blur_event()">
+    <!-- <input type="text" oninput="alert('输入内容发生变化了！')"> -->
+    <script>
+        function click_event() {
+            alert("这是一个按钮的事件处理示例！");
+        }
+         //聚焦事件
+        function focus_event() {
+            // alert("输入框获得焦点了！");
+            console.log("输入框获得焦点了！");
+        }
+        //失焦事件
+        function blur_event() {
+            // alert("输入框失去焦点了！");
+            console.log("输入框失去焦点了！");
+        }
+    </script>
+</body>
+</html>
