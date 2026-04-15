@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <div id="dom_demo">这是一个ID选择DOM示例</div>
+    <div class="dom_example">这是一个类选择DOM示例</div>
+    <div>只是一个普通的div</div>
+    <a href="#">链接</a>
+
+    <script>
+        // DOM示例
+        var element_id = document.getElementById("dom_demo");
+        // element_id.style.color = "red";
+        console.log("DOM示例：", element_id);
+
+        var element_class = document.getElementsByClassName("dom_example")[0];
+        // element_class.style.color = "blue";
+        console.log("DOM示例：", element_class);
+
+        var element_tag = document.getElementsByTagName("div")[2];
+        console.log(element_tag);
+
+        element_id.innerHTML = '<a href="#">链接</a>'
+        element_class.innerText = '<a href="#">链接</a>';
+
+        element_tag.style.color = 'red';
+        element_tag.style.fontSize = '20px';
+
+        // document.body.style.backgroundColor = "lightblue";
+        // const heading = document.createElement("h1");
+        // heading.textContent = "这是一个DOM示例";
+        // document.body.appendChild(heading);
+    </script>
+    
+</body>
+</html>
