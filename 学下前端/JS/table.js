@@ -31,6 +31,4 @@ function editRow(btn) {
     if (new_age != null && new_age != "") {
         row.cells[1].innerHTML = new_age;
     }
-
-
 }
