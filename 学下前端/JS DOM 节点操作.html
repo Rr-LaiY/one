@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格 增删改查</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">表格 增删改查</h1>
+    <button onclick="addRow()">添加</button>
+    <table id="dataTable">
+        <tr>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>操作</th>
+        </tr>
+        <tr>
+            <td>张三</td>
+            <td>25</td>
+            <td><button onclick="editRow(this)">编辑</button>
+                <button onclick="deleteRow(this)">删除</button>
+            </td>
+        </tr>
+        <tr>
+            <td>李四</td>
+            <td>30</td>
+            <td><button onclick="editRow(this)">编辑</button>
+                <button onclick="deleteRow(this)">删除</button>
+            </td>
+        </tr>
+    </table>
+    <script src="./JS/table.js"></script>
+</body>
+</html>
