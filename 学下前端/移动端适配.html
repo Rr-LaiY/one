@@ -5,20 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>移动端适配</title>
     <style>
+        /* html {
+            font-size: 20px;
+        } */
         .boxt_px {
-            width: 400px;
+            width: 300px;
             height: 100px;
             background-color: rgb(68, 215, 241);
+            margin-bottom: 20px;
         }
         .boxt_rem {
-            width: 37.5rem;
-            height: 6.25rem;
+            width: 5rem;
+            height: 3rem;
             background-color: pink;
         }
         .boxt_vw {
             width: 60vw;
             height: 10vh;
-            background-color: white;
+            background-color: rgb(0, 0, 0);
         }
         .boxt_vh {
             width: 60vw;
@@ -33,6 +37,20 @@
     <div class="boxt_vw"></div>
     <div class="boxt_vh"></div>
 
-    
+    <script>
+        // 1.获取设备宽度
+        // var deviceWidth = document.documentElement.clientWidth || window.innerWidth;
+        // 2.设置html的font-size
+        // document.documentElement.style.fontSize = deviceWidth / 10 + 'px';
+        function resetHtmlFontSize() {
+        document.documentElement.style.fontSize = screen.width / 10 + 'px';
+        }
+        resetHtmlFontSize();
+
+        // 监听窗口大小变化事件，重新设置html的font-size
+        window.onresize = function() {
+            resetHtmlFontSize();
+        }
+    </script>    
 </body>
 </html>
