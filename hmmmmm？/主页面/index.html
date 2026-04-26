@@ -18,12 +18,22 @@
 
         /* ========== HTML和Body基础设置 ========== */
         /* 让页面占满整个视口，隐藏滚动条 */
+        
+        *,
+        *::before,
+        *::after {
+        box-sizing: inherit;
+        margin: 0;
+        padding: 0;
+        }
         html, body {
             width: 100%;            /* 宽度100% */
             height: 100%;           /* 高度100% */
             overflow: hidden;       /* 隐藏溢出内容（无滚动条） */
         }
-
+        html {
+            box-sizing: border-box;
+        }
         /* ========== Body主体样式 ========== */
         /* 黑色背景，作为所有元素的定位参考 */
         body {
