@@ -1,4 +1,22 @@
 <template>
+    <!-- ========== 载入动画 ========== -->
+    <!-- 这个div覆盖整个屏幕，载入完成后隐藏 -->
+    <div v-if="isLoading" class="loading-screen">
+        <div class="h-line"></div>
+        <div class="welcome-text">-WELCOME-</div>
+        <div class="loading-box-2"></div>
+        
+        <div class="loading-box">
+            <div class="loading-blink"></div>
+            <span class="loading-text">LOADING...</span>
+            
+        
+            <div class="loading-bar">
+                <span class="loading-text-dark">LOADING...</span>
+
+            </div>
+        </div>
+    </div>
   <!-- ========== HUD装饰层 ========== -->
     <!-- 固定在屏幕四角和中央的科幻风格装饰元素 -->
     <div class="hud-decorations">
@@ -8,32 +26,7 @@
         <div class="hud-corner hud-corner-bl"></div>  <!-- 左下角 -->
         <div class="hud-corner hud-corner-br"></div>  <!-- 右下角 -->
         
-        <!-- 水平电路连接线（已注释）
-        <div class="circuit-line circuit-line-1"></div>
-        <div class="circuit-line circuit-line-2"></div>
-        -->
-        
-        <!-- 中央技术状态标签（已注释）
-        <div class="tech-label">INTERFACE_ACTIVE</div>
-        -->
-        
-        <!-- 装饰性UI框架（已注释）
-        <div class="ui-frame ui-frame-1"></div>
-        <div class="ui-frame ui-frame-2"></div>
-        -->
     </div>
-
-    <!-- ========== 左侧装饰面板（已注释） ========== -->
-    <!--
-    <div class="left-panel">
-        <div class="left-panel-corner-br"></div>
-        <div class="left-panel-line left-panel-line-h1"></div>
-        <div class="left-panel-line left-panel-line-h2"></div>
-        <div class="left-panel-line left-panel-line-v1"></div>
-        <div class="left-panel-dot left-panel-dot-1"></div>
-        <div class="left-panel-dot left-panel-dot-2"></div>
-    </div>
-    -->
 
     <!-- ========== 主内容容器 ========== -->
     <div class="container">
@@ -64,27 +57,17 @@
             </div>
         </div>
         
-        <!-- ========== 右侧内容区域（已注释） ========== -->
-        <!--
-        <div class="right-section">
-            <h1 ref="titleH1">
-                <span class="char-switch" ref="charContainer">
-                    <span class="char-you" ref="charYou">你</span>
-                    <span class="char-me" ref="charMe">我</span>
-                </span>
-                <i class="extended-slash" ref="slashElement"></i> 想了解_
-            </h1>
-        </div>
-        -->
     </div>
 
 
 </template>
 <script setup lang="ts">
+    const isLoading = ref(true)  // 载入状态，初始为true
+
     // ========================================
     // Vue 3 导入：使用组合式API
     // ========================================
-    import { ref, onMounted, onUnmounted } from 'vue'
+    import { ref, onMounted } from 'vue'
     // 导入头像图片（Vue中需要用import导入静态资源）
     import avatarImg from './assets/F_LaiY.png'
 
@@ -92,13 +75,7 @@
     // 模板引用（Vue的ref代替原来的getElementById）
     // ========================================
     const nameText = ref<HTMLElement | null>(null)
-    const dividerLine = ref<HTMLElement | null>(null)
-    const titleH1 = ref<HTMLElement | null>(null)
     const leftSection = ref<HTMLElement | null>(null)
-    const slashElement = ref<HTMLElement | null>(null)
-    const charContainer = ref<HTMLElement | null>(null)
-    const charYou = ref<HTMLElement | null>(null)
-    const charMe = ref<HTMLElement | null>(null)
 
     // ========================================
     // 功能1：文字拆分为单个字符
@@ -123,136 +100,6 @@
     }
     
     // ========================================
-    // 功能2：响应式分割线定位
-    // ========================================
-    // 根据窗口大小和元素位置动态调整分割线位置，保持布局平衡
-    function updateDividerPosition() {
-        // 获取所有需要的DOM元素（通过Vue的ref模板引用）
-        const container = document.querySelector('.container')      // 主容器
-        const h1 = titleH1.value                                    // 标题元素
-        const divider = dividerLine.value                           // 分割线
-        const leftSec = leftSection.value                           // 左侧区域
-        
-        // 如果任何元素不存在，直接返回（防止错误）
-        if (!container || !h1 || !divider || !leftSec) return
-        
-        // 获取各元素的位置和尺寸信息
-        const containerRect = container.getBoundingClientRect()  // 容器的位置信息
-        const h1Rect = h1.getBoundingClientRect()                // 标题的位置信息
-        const leftRect = leftSec.getBoundingClientRect()         // 左侧区域的位置信息
-        
-        // 计算关键位置参数
-        const h1LeftRelative = h1Rect.left - containerRect.left     // h1左边缘相对于容器的位置
-        const rightMargin = containerRect.right - h1Rect.right      // h1右侧到容器右边缘的距离
-        const containerWidth = containerRect.width                   // 容器宽度
-        const isSmallPage = containerWidth < 800                     // 判断是否为小屏幕
-        const leftSectionRight = leftRect.right - containerRect.left // 左侧区域右边缘相对于容器的位置
-        const dividerGap = 40                                        // 分割线与h1的固定间距
-        
-        // 计算分割线的理想位置：h1左侧 - 40px
-        let dividerLeft = h1LeftRelative - dividerGap
-        
-        // 限制条件：分割线最左不能超过左侧区域右边缘
-        if (dividerLeft < leftSectionRight) {
-            dividerLeft = leftSectionRight
-        }
-        
-        // 计算h1的调整量，让h1在大屏幕时保持居中
-        let h1Adjustment = 0
-        const actualLeftGap = h1LeftRelative - dividerLeft  // h1左侧与分割线的实际距离
-        
-        // 大屏幕时调整h1位置，使其左右间距平衡
-        if (!isSmallPage) {
-            const targetAdjustment = actualLeftGap - rightMargin  // 计算需要调整的量
-            h1Adjustment = Math.max(0, targetAdjustment)          // 只向右调整，不向左
-        }
-        
-        // 应用计算结果到DOM元素
-        h1.style.right = h1Adjustment + 'px'        // 应用h1位置调整
-        divider.style.left = dividerLeft + 'px'     // 应用分割线位置
-    }
-    
-    // ========================================
-    // 功能3：斜线拖动交互
-    // ========================================
-    // 实现拖动斜线切换"你"/"我"字的交互效果
-    // 拖动状态变量
-    let isDragging = false      // 是否正在拖动
-    let startX = 0               // 拖动起始X坐标
-    let currentX = 0             // 当前X偏移量
-    const maxDrag = 40           // 最大拖动距离（像素）
-    
-    // ========== 核心函数：更新斜线位置和字符显示 ==========
-    function updateSlashPosition(dragDistance: number) {
-        const slash = slashElement.value
-        const meEl = charMe.value
-        const youEl = charYou.value
-        if (!slash || !meEl || !youEl) return
-
-        // 限制拖动距离在0到maxDrag之间
-        const clampedDistance = Math.max(0, Math.min(maxDrag, dragDistance))
-        
-        // 移动斜线元素（向左移动，额外偏移4px以对齐）
-        slash.style.transform = `translateX(${-(clampedDistance + 4)}px)`
-        
-        // 计算斜线在字符上的位置百分比
-        const charWidth = 28                                          // 字符宽度
-        const slashOffsetPercent = (clampedDistance / charWidth) * 100 // 转换为百分比
-        const angleOffset = 45                                         // 斜线角度偏移
-        
-        // ===== 更新"我"字的裁剪路径 =====
-        // "我"字从斜线右侧逐渐显现
-        const startOffsetMe = 60                                      // 初始偏移
-        const rightEdgeTop = 100 - slashOffsetPercent + startOffsetMe // 顶部右边缘位置
-        const rightEdgeBottom = Math.max(0, rightEdgeTop - angleOffset) // 底部右边缘位置
-        
-        // 使用polygon裁剪路径创建斜线遮罩效果
-        meEl.style.clipPath = `polygon(
-            ${rightEdgeTop}% 0,
-            100% 0,
-            100% 100%,
-            ${rightEdgeBottom}% 100%
-        )`
-        
-        // ===== 更新"你"字的裁剪路径 =====
-        // "你"字从斜线右侧逐渐隐去
-        const offsetStart = -30                                       // 初始偏移
-        let rightClipTop = 100 - slashOffsetPercent - offsetStart     // 顶部右边缘位置
-        if (rightClipTop < 0) rightClipTop = 0                        // 限制最小值
-        const rightClipBottom = Math.max(0, rightClipTop - angleOffset) // 底部右边缘位置
-
-        // 使用polygon裁剪路径创建斜线遮罩效果
-        youEl.style.clipPath = `polygon(
-            0 0,
-            ${rightClipTop}% 0,
-            ${rightClipBottom}% 100%,
-            0 100%
-        )`
-    }
-    
-    // ========== Pointer事件处理（统一鼠标和触摸） ==========
-    function handlePointerDown(e: PointerEvent) {
-        isDragging = true
-        startX = e.clientX - currentX
-        slashElement.value?.classList.add('dragging')
-        slashElement.value?.setPointerCapture(e.pointerId)
-        e.preventDefault()
-    }
-    
-    function handlePointerMove(e: PointerEvent) {
-        if (!isDragging) return
-        const deltaX = e.clientX - startX
-        currentX = Math.max(-maxDrag, Math.min(0, deltaX))
-        updateSlashPosition(-currentX)
-    }
-    
-    function handlePointerUp() {
-        if (!isDragging) return
-        isDragging = false
-        slashElement.value?.classList.remove('dragging')
-    }
-    
-    // ========================================
     // Vue生命周期：组件挂载后执行（相当于原来的页面加载）
     // ========================================
     // 【重要】在Vue中，<script setup>执行时DOM还没渲染，
@@ -261,30 +108,13 @@
         // 设置页面标题
         document.title = '我去！这是我的网站O.o'
 
+        // 模拟载入过程
+        setTimeout(() => {
+            isLoading.value = false  // 载入完成，隐藏载入屏幕
+        }, 10000)  // 10秒后载入完成
+
         // 功能1：文字拆分
         splitTextToSpans()
-        
-        // 功能2：分割线定位
-        updateDividerPosition()
-        // 窗口大小改变时重新计算分割线位置
-        window.addEventListener('resize', updateDividerPosition)
-        
-        // 功能3：斜线拖动
-        // ========== 绑定事件监听器 ==========
-        slashElement.value?.addEventListener('pointerdown', handlePointerDown)
-        document.addEventListener('pointermove', handlePointerMove)
-        document.addEventListener('pointerup', handlePointerUp)
-        // 初始化斜线位置（设置为初始状态）
-        updateSlashPosition(0)
-    })
-
-    // ========================================
-    // Vue生命周期：组件卸载时清理（防止内存泄漏）
-    // ========================================
-    onUnmounted(() => {
-        window.removeEventListener('resize', updateDividerPosition)
-        document.removeEventListener('pointermove', handlePointerMove)
-        document.removeEventListener('pointerup', handlePointerUp)
     })
 
 </script>
@@ -294,7 +124,313 @@
         /* ========== 注意 ========== */
         /* 全局样式（*、html、body、body::before）已移至 src/assets/main.css */
         /* 这里只保留组件级别的scoped样式 */
+        /*载入动画需要的元素*/
+        .loading-screen {
+            position: fixed; 
+            inset: 0; 
+            background-color: transparent; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            z-index: 20;
+        }
+        .h-line
+        {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            z-index: 1;
+            height: 0.02vw;
+            background-color: rgb(255, 255, 255);
+            transform: translateY(-50%);
+        }
+        .h-line {
+            animation: h-line-anin 1.8s ease forwards; /* 应用载入动画 */
+        }
+        .loading-box {
+            
+            position: relative;
+            border: 0.05vw solid rgb(255, 255, 255);
+            padding: 0.8vw 3.5vw;
+            width: 3.5vw;
+            z-index: 2;
+            background-color: rgb(0, 0, 0);
+            box-sizing: border-box;
+            overflow: hidden;
+            opacity: 0;
+            
+            animation: 
+                box-anin 1.25s ease forwards 0.6s,  /* 0.6秒后开始，持续1.75秒 */
+                box-shrink 2s ease-in-out forwards 3.2s ;
+        }
+        .loading-box-2 {
+            position: absolute;
+            width: 16vw;          /* 展开后的总宽度（到welcome左边缘的距离） */
+            height: 4vw;
+            background-color: #ffffff;
+            border: 0.05vw solid white;
+            box-sizing: border-box;
+            z-index: 3;
+            opacity: 0;
+            
+            right: calc(50% - 7vw - 1px);  
+            top: 50%;
+            transform: translateY(-50%);
+            animation: box-shrink-2 1.5s ease forwards 4.5s;
+        }
+        .loading-blink {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(0, 0, 0);
+            z-index: 9;
+            opacity: 0;
+            animation: blink-anin 0.08s ease 1 2.7s; 
+        }
+        .loading-text {
 
+            color: rgb(255, 255, 255);
+            font-size: 0.8vw;
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0vw;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+            animation: text-anin 0.5s ease forwards 1.5s; /* 与loading-bar动画同步 */
+        }
+
+        .loading-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            background-color: rgb(255, 255, 255);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            animation: bar-anin 1s ease-in forwards 2s
+            
+        }
+        .loading-text-dark {
+            white-space: nowrap;
+            padding-left: 0.5vw;
+            /* top: 50%;
+            left: 50%; */
+            /* transform: translate(-50%, -50%); */
+            color: rgb(0, 0, 0);
+            font-size: 0.8vw;                                                                       
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.1vw;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+
+            animation: text-anin 0.01s ease forwards 2s; /* 与loading-bar动画同步 */
+        }  
+        
+        .welcome-text {
+            position: absolute;
+            color: rgb(255, 255, 255);
+            font-size: 2vw;
+            font-family: 'Courier New',monospace;
+            letter-spacing: 0.5vw;
+            opacity: 0;
+            animation: welcome-appear 1s ease forwards 5s;
+        }
+        
+        /* ========== 载入动画 ========== */
+        @keyframes h-line-anin {
+            0% { 
+                left: -40%; /* 从屏幕左侧外开始 */
+                right: 100%;  /* 初始宽度 */
+            }
+            30% { 
+                left: 0%;   /* 移动到屏幕中间 */
+                right: 50%;  /* 保持宽度 */
+            }
+            60% { 
+                left: 0%;  /* 保持在中间 */
+                right: 50%;  /* 保持宽度 */
+            }
+            100% {
+                left: 50%;   /* 保持在中间 */
+                right: 50%;  /* 保持宽度 */            
+            }
+
+        }
+
+        /* @keyframes box-anin {
+            0% {
+                opacity: 1; 
+                transform: scaleX(0) scaleY(0);
+            }
+            15% {
+                opacity: 1; 
+                transform: scaleX(0) scaleY(1);
+            }
+            30% {
+                opacity: 1; 
+                transform: scaleX(0) scaleY(1);
+            }
+            100% {
+                opacity: 1; 
+                transform: scaleX(1) scaleY(1);
+            }
+        } */
+
+        @keyframes box-anin {
+            0% {
+                opacity: 1; 
+                width:1px;
+                
+                padding: 0;
+            }
+            30% {
+                opacity: 1; 
+                width: 1px;
+                
+                padding: 0.8vw 0;
+            }
+            100% {
+                opacity: 1; 
+                width: 3vw;
+                
+                padding: 0.8vw 3.5vw;
+            }
+        }
+
+        @keyframes blink-anin {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* box-shrink：全 padding 版本，你自己试试 */
+        @keyframes box-shrink{
+            /* 框缩成竖线 */
+            0% {
+                opacity: 1; 
+                width: 3vw;
+                
+                padding: 0.8vw 3.5vw;
+                transform: translateX(0);
+
+
+            }
+            19.9%{
+                opacity: 1; 
+                width: 1px;
+                padding: 0.8vw 0;
+                transform: translateX(7vw);
+
+            }
+            20% {
+                opacity: 1; 
+                width: 1px;
+                height: 1.6vw;
+                padding: 0;
+                transform: translateX(7vw);
+            }
+            /* 竖线变高 */
+            40% {
+                opacity: 1; 
+                width: 1px;
+                height: 4vw;
+                padding: 0;
+                transform: translateX(7vw);
+                
+            }
+            /* 停留 */
+            99% {
+                opacity: 1; 
+                width: 1px;
+                height: 4vw;
+                padding: 0;
+                transform: translateX(7vw);
+            }
+            
+            100% {
+                opacity: 0; 
+                width: 1px;
+                padding: 0;
+                transform: translateX(7vw);
+            }
+        }
+        @keyframes box-shrink-2 {
+            0% {
+                opacity: 1; 
+                clip-path: inset(0 0 0 calc(100%));
+            }
+            40% {
+                opacity: 1; 
+                clip-path: inset(0 0 0 0);
+
+            }   
+            50% {
+                opacity: 1; 
+                clip-path: inset(0 0 0 0);
+
+            }
+            99%{
+                opacity: 1;
+                clip-path: inset(0 calc(100% - 1px) 0 0);
+            }
+            100% {
+                opacity: 1; 
+                clip-path: inset(0 calc(100% - 1px) 0 0);
+            }
+        }
+        @keyframes welcome-appear{
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                
+            }
+        }
+
+        @keyframes text-anin {
+            0% {
+                letter-spacing: 0vw;
+            }
+                
+            100% {
+                letter-spacing: 0.1vw;
+
+            }
+        }
+
+        @keyframes bar-anin {
+            0% {
+                width: 0;
+                opacity: 1;
+                
+            }
+            1% {
+                width: 0;
+                opacity: 1;
+
+                
+            }
+            100% {
+                width: 100%;
+                opacity: 1;
+            }
+        }
+        
         /* ========== HUD装饰容器 ========== */
         /* 固定在屏幕上的科幻HUD界面装饰层 */
         .hud-decorations {
@@ -405,123 +541,6 @@
             right: 0;                   /* 位于右侧 */
         }
 
-        /* ========== 电路连接线装饰 ========== */
-        /* 水平电路线基础样式，带渐变效果 */
-        .circuit-line {
-            position: absolute;                 /* 绝对定位 */
-            top: 50%;                           /* 垂直居中 */
-            width: 200px;                       /* 宽度200像素 */
-            height: 1px;                        /* 高度1像素（细线） */
-            background: linear-gradient(90deg,  /* 水平渐变 */
-                rgba(255, 255, 255, 0.2) 0%,    /* 两端较暗 */
-                rgba(0, 255, 255, 0.3) 50%,     /* 中间青色较亮 */
-                rgba(255, 255, 255, 0.2) 100%); /* 两端较暗 */
-        }
-
-        /* 电路线上的发光节点 */
-        .circuit-line::before {
-            content: '';                            /* 创建伪元素 */
-            position: absolute;                     /* 绝对定位 */
-            top: -2px;                              /* 向上偏移，居中对齐线条 */
-            width: 5px;                             /* 宽度5像素 */
-            height: 5px;                            /* 高度5像素 */
-            background: rgba(0, 255, 255, 0.6);     /* 青色背景 */
-            border-radius: 50%;                     /* 圆形 */
-            box-shadow: 0 0 5px rgba(0, 255, 255, 0.8); /* 发光效果 */
-        }
-
-        /* 左侧电路线 */
-        .circuit-line-1 {
-            left: 170px;                /* 距左侧170像素 */
-        }
-
-        .circuit-line-1::before {
-            left: 50%;                  /* 节点位于线条中间 */
-        }
-
-        /* 右侧电路线 */
-        .circuit-line-2 {
-            right: 170px;               /* 距右侧170像素 */
-        }
-
-        .circuit-line-2::before {
-            right: 50%;                 /* 节点位于线条中间 */
-        }
-
-        /* ========== 技术标签 ========== */
-        /* 页面中央上方的状态标签 */
-        .tech-label {
-            position: absolute;                         /* 绝对定位 */
-            top: 50%;                                   /* 垂直50%位置 */
-            left: 50%;                                  /* 水平50%位置 */
-            transform: translate(-50%, -200px);         /* 居中并向上偏移200px */
-            font-size: 8px;                             /* 小字体 */
-            color: rgba(255, 255, 255, 0.3);            /* 半透明白色 */
-            font-family: 'Courier New', monospace;      /* 等宽字体 */
-            letter-spacing: 2px;                        /* 字符间距 */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* 边框 */
-            padding: 3px 8px;                           /* 内边距 */
-            background: rgba(0, 0, 0, 0.5);             /* 半透明黑色背景 */
-        }
-
-        /* 技术标签下方的连接线 */
-        .tech-label::before {
-            content: '';                                /* 创建伪元素 */
-            position: absolute;                         /* 绝对定位 */
-            left: 50%;                                  /* 水平居中 */
-            bottom: -20px;                              /* 位于标签下方 */
-            width: 1px;                                 /* 宽度1像素 */
-            height: 20px;                               /* 高度20像素 */
-            background: rgba(255, 255, 255, 0.2);       /* 半透明白色 */
-        }
-
-        /* ========== UI装饰框架 ========== */
-        /* UI框架基础样式 */
-        .ui-frame {
-            position: absolute;                         /* 绝对定位 */
-            border: 1px solid rgba(255, 255, 255, 0.15); /* 半透明边框 */
-        }
-
-        /* 左侧UI框架 */
-        .ui-frame-1 {
-            top: 35%;                   /* 距顶部35% */
-            left: 10%;                  /* 距左侧10% */
-            width: 80px;                /* 宽度80像素 */
-            height: 60px;               /* 高度60像素 */
-        }
-
-        /* 左侧UI框架的左上角装饰 */
-        .ui-frame-1::before {
-            content: '';                                    /* 创建伪元素 */
-            position: absolute;                             /* 绝对定位 */
-            top: -1px;                                      /* 位于顶部 */
-            left: -1px;                                     /* 位于左侧 */
-            width: 15px;                                    /* 宽度15像素 */
-            height: 15px;                                   /* 高度15像素 */
-            border-left: 1px solid rgba(0, 255, 255, 0.4);  /* 左边框 */
-            border-top: 1px solid rgba(0, 255, 255, 0.4);   /* 上边框 */
-        }
-
-        /* 右侧UI框架 */
-        .ui-frame-2 {
-            top: 60%;                   /* 距顶部60% */
-            right: 15%;                 /* 距右侧15% */
-            width: 100px;               /* 宽度100像素 */
-            height: 70px;               /* 高度70像素 */
-        }
-
-        /* 右侧UI框架的右下角装饰 */
-        .ui-frame-2::after {
-            content: '';                                    /* 创建伪元素 */
-            position: absolute;                             /* 绝对定位 */
-            bottom: -1px;                                   /* 位于底部 */
-            right: -1px;                                    /* 位于右侧 */
-            width: 15px;                                    /* 宽度15像素 */
-            height: 15px;                                   /* 高度15像素 */
-            border-right: 1px solid rgba(0, 255, 255, 0.4); /* 右边框 */
-            border-bottom: 1px solid rgba(0, 255, 255, 0.4); /* 下边框 */
-        }
-
         /* ========== 主容器 ========== */
         /* 页面主要内容容器，使用弹性布局 */
         .container {
@@ -534,123 +553,6 @@
             font-family: Arial, sans-serif; /* 字体 */
             width: 100%;                    /* 宽度100% */
             height: 100%;                   /* 高度100% */
-        }
-
-        /* ========== 竖直分割线 ========== */
-        /* 分隔左右区域的垂直线 */
-        .divider-line {
-            position: absolute;                         /* 绝对定位 */
-            top: 0;                                     /* 从顶部开始 */
-            width: 2px;                                 /* 宽度2像素 */
-            height: 100%;                               /* 高度100% */
-            background-color: rgba(170, 170, 170, 0.911); /* 灰色半透明 */
-        }
-
-        /* ========== 左侧大方框装饰 ========== */
-        /* 固定在左侧的科幻风格装饰面板 */
-        .left-panel {
-            position: fixed;                            /* 固定定位 */
-            left: 40px;                                 /* 距左侧40像素 */
-            top: 50%;                                   /* 垂直50%位置 */
-            transform: translateY(-50%);                /* 垂直居中 */
-            width: 350px;                               /* 宽度350像素 */
-            height: 500px;                              /* 高度500像素 */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* 边框 */
-            background: rgba(0, 0, 0, 0.3);             /* 半透明黑色背景 */
-            backdrop-filter: blur(5px);                 /* 背景模糊效果 */
-            z-index: 0;                                 /* 层级0，在内容下方 */
-            pointer-events: none;                       /* 不响应鼠标事件 */
-        }
-
-        /* 左侧面板的标题标签 */
-        .left-panel::before {
-            content: 'SYSTEM_PANEL';                    /* 显示文字 */
-            position: absolute;                         /* 绝对定位 */
-            top: -12px;                                 /* 位于面板上方 */
-            left: 15px;                                 /* 距左侧15像素 */
-            font-size: 10px;                            /* 字体大小 */
-            color: rgba(255, 255, 255, 0.5);            /* 半透明白色 */
-            font-family: 'Courier New', monospace;      /* 等宽字体 */
-            letter-spacing: 2px;                        /* 字符间距 */
-            background: #000;                           /* 黑色背景 */
-            padding: 2px 8px;                           /* 内边距 */
-        }
-
-        /* 左侧面板的左上角装饰 */
-        .left-panel::after {
-            content: '';                                    /* 创建伪元素 */
-            position: absolute;                             /* 绝对定位 */
-            top: -1px;                                      /* 位于顶部 */
-            left: -1px;                                     /* 位于左侧 */
-            width: 25px;                                    /* 宽度25像素 */
-            height: 25px;                                   /* 高度25像素 */
-            border-left: 2px solid rgba(0, 255, 255, 0.6);  /* 左边框 */
-            border-top: 2px solid rgba(0, 255, 255, 0.6);   /* 上边框 */
-        }
-
-        /* 左侧面板的右下角装饰 */
-        .left-panel-corner-br {
-            position: absolute;                             /* 绝对定位 */
-            bottom: -1px;                                   /* 位于底部 */
-            right: -1px;                                    /* 位于右侧 */
-            width: 25px;                                    /* 宽度25像素 */
-            height: 25px;                                   /* 高度25像素 */
-            border-right: 2px solid rgba(0, 255, 255, 0.6); /* 右边框 */
-            border-bottom: 2px solid rgba(0, 255, 255, 0.6); /* 下边框 */
-        }
-
-        /* 左侧面板内的装饰线条基础样式 */
-        .left-panel-line {
-            position: absolute;                         /* 绝对定位 */
-            background: rgba(255, 255, 255, 0.15);      /* 半透明白色 */
-        }
-
-        /* 上方水平线 */
-        .left-panel-line-h1 {
-            top: 60px;                  /* 距顶部60像素 */
-            left: 20px;                 /* 距左侧20像素 */
-            right: 20px;                /* 距右侧20像素 */
-            height: 1px;                /* 高度1像素 */
-        }
-
-        /* 下方水平线 */
-        .left-panel-line-h2 {
-            bottom: 60px;               /* 距底部60像素 */
-            left: 20px;                 /* 距左侧20像素 */
-            right: 20px;                /* 距右侧20像素 */
-            height: 1px;                /* 高度1像素 */
-        }
-
-        /* 中间垂直线 */
-        .left-panel-line-v1 {
-            top: 80px;                  /* 距顶部80像素 */
-            bottom: 80px;               /* 距底部80像素 */
-            left: 50%;                  /* 水平居中 */
-            width: 1px;                 /* 宽度1像素 */
-        }
-
-        /* 左侧面板内的发光装饰点基础样式 */
-        .left-panel-dot {
-            position: absolute;                         /* 绝对定位 */
-            width: 4px;                                 /* 宽度4像素 */
-            height: 4px;                                /* 高度4像素 */
-            background: rgba(0, 255, 255, 0.7);         /* 青色背景 */
-            border-radius: 50%;                         /* 圆形 */
-            box-shadow: 0 0 8px rgba(0, 255, 255, 0.8); /* 发光效果 */
-        }
-
-        /* 上方装饰点 */
-        .left-panel-dot-1 {
-            top: 60px;                              /* 距顶部60像素 */
-            left: 50%;                              /* 水平居中 */
-            transform: translate(-50%, -50%);       /* 精确居中 */
-        }
-
-        /* 下方装饰点 */
-        .left-panel-dot-2 {
-            bottom: 60px;                           /* 距底部60像素 */
-            left: 50%;                              /* 水平居中 */
-            transform: translate(-50%, 50%);        /* 精确居中 */
         }
 
         /* ========== 左侧内容区域 ========== */
@@ -669,82 +571,6 @@
             .left-section {
                 transform: translateX(-20px); /* 向左移动20像素 */
             }
-            .left-panel {
-                display: none;              /* 隐藏装饰面板 */
-            }
-        }
-
-        /* ========== 右侧内容区域 ========== */
-        /* 包含标题的右侧区域 */
-        .right-section {
-            display: flex;                  /* 弹性布局 */
-            flex-direction: column;         /* 纵向排列 */
-            align-items: flex-end;          /* 右对齐 */
-        }
-
-        /* ========== 主标题样式 ========== */
-        /* 右侧的主标题，带虚线边框和角落装饰 */
-        h1 {
-            color: #0fe0d6;                 /* 青色文字 */
-            font-size: 28px;                /* 字体大小 */
-            margin-bottom: 30px;            /* 下边距 */
-            padding: 20px 90px 20px 30px;   /* 内边距：上右下左 */
-            border: 1px solid;              /* 1像素边框 */
-            border-image: linear-gradient(90deg,  /* 虚线边框效果（使用渐变） */
-                rgba(255, 255, 255, 0.3) 0%,      /* 实线段 */
-                rgba(255, 255, 255, 0.3) 25%,
-                transparent 25%,                   /* 透明段（间隙） */
-                transparent 30%,
-                rgba(255, 255, 255, 0.3) 30%,      /* 实线段 */
-                rgba(255, 255, 255, 0.3) 70%,
-                transparent 70%,                   /* 透明段 */
-                transparent 75%,
-                rgba(255, 255, 255, 0.3) 75%,      /* 实线段 */
-                rgba(255, 255, 255, 0.3) 100%) 1;
-            position: relative;             /* 相对定位，为伪元素提供定位上下文 */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 文字阴影 */
-            transition: all 0.3s ease;      /* 过渡动画 */
-            white-space: nowrap;            /* 文字不换行 */
-        }
-
-        /* 标题左上角装饰 */
-        h1::before {
-            content: '';                                    /* 创建伪元素 */
-            position: absolute;                             /* 绝对定位 */
-            top: -1px;                                      /* 位于顶部 */
-            left: -1px;                                     /* 位于左侧 */
-            width: 20px;                                    /* 宽度20像素 */
-            height: 20px;                                   /* 高度20像素 */
-            border-left: 1px solid rgba(0, 255, 255, 0.6);  /* 左边框 */
-            border-top: 1px solid rgba(0, 255, 255, 0.6);   /* 上边框 */
-        }
-
-        /* 标题右下角装饰 */
-        h1::after {
-            content: '';                                    /* 创建伪元素 */
-            position: absolute;                             /* 绝对定位 */
-            bottom: -1px;                                   /* 位于底部 */
-            right: -1px;                                    /* 位于右侧 */
-            width: 20px;                                    /* 宽度20像素 */
-            height: 20px;                                   /* 高度20像素 */
-            border-right: 1px solid rgba(0, 255, 255, 0.6); /* 右边框 */
-            border-bottom: 1px solid rgba(0, 255, 255, 0.6); /* 下边框 */
-        }
-
-        /* 标题悬停效果 */
-        h1:hover {
-            border-image: linear-gradient(90deg,  /* 悬停时边框变为青色 */
-                rgba(0, 255, 255, 0.25) 0%,
-                rgba(0, 255, 255, 0.25) 25%,
-                transparent 25%,
-                transparent 30%,
-                rgba(0, 255, 255, 0.25) 30%,
-                rgba(0, 255, 255, 0.25) 70%,
-                transparent 70%,
-                transparent 75%,
-                rgba(0, 255, 255, 0.25) 75%,
-                rgba(0, 255, 255, 0.25) 100%) 1;
-            box-shadow: 0 0 5px rgba(0, 255, 255, 0.05); /* 微弱发光效果 */
         }
 
         /* ========== 个人信息区域 ========== */
@@ -849,122 +675,6 @@
         /* 描述文字悬停效果 */
         .profile-desc:hover {
             color: #7a3aff;             /* 颜色变亮 */
-        }
-
-        /* ========== 字符切换效果 ========== */
-        /* "你"/"我"字符切换容器 */
-        .char-switch {
-            position: relative;         /* 相对定位，为绝对定位的"我"字提供上下文 */
-            display: inline;            /* 行内元素 */
-        }
-
-        /* "你"和"我"字符的共同样式 */
-        .char-you,
-        .char-me {
-            color: #fa2b70;             /* 粉红色 */
-            font-size: inherit;         /* 继承父元素字体大小 */
-            line-height: inherit;       /* 继承行高 */
-            font-weight: inherit;       /* 继承字重 */
-        }
-
-        /* "你"字：默认显示 */
-        .char-you {
-            display: inline;            /* 行内元素 */
-        }
-
-        /* "我"字：叠加在"你"字上方 */
-        .char-me {
-            position: absolute;         /* 绝对定位 */
-            left: 0;                    /* 左对齐 */
-            top: -7px;                  /* 向上偏移7像素 */
-            display: inline;            /* 行内元素 */
-            color: #00c3ff;             /* 青色 */
-        }
-
-        /* ========== 可拖动的延长斜线 ========== */
-        /* 斜线元素：可拖动以切换"你"/"我"字 */
-        .extended-slash {
-            position: relative;         /* 相对定位 */
-            display: inline-block;      /* 行内块元素 */
-            width: 8px;                 /* 宽度8像素 */
-            height: 28px;               /* 高度28像素 */
-            margin: 0 -2px;             /* 负边距，紧凑排列 */
-            cursor: grab;               /* 抓取光标 */
-            user-select: none;          /* 禁止文字选择 */
-            vertical-align: baseline;   /* 基线对齐 */
-            top: 27px;                  /* 向下偏移27像素 */
-            right: -8px;                   /* 向右偏移5像素 */
-        }
-
-        /* 拖动中的斜线 */
-        .extended-slash.dragging {
-            cursor: grabbing;           /* 抓取中光标 */
-        }
-
-        /* 斜线的视觉表现（虚线效果） */
-        .extended-slash::before {
-            content: '';                            /* 创建伪元素 */
-            position: absolute;                     /* 绝对定位 */
-            left: 50%;                              /* 水平居中 */
-            top: -40px;                             /* 向上偏移 */
-            width: 6px;                             /* 宽度6像素 */
-            height: 60px;                           /* 高度60像素 */
-            border-left: 1px solid #05b8ee;         /* 左边框 */
-            border-right: 1px solid #05b8ee;        /* 右边框 */
-            border-image: linear-gradient(180deg,   /* 虚线效果（使用渐变） */
-                #05b8ee 0%,
-                #05b8ee 20%,
-                transparent 20%,
-                transparent 25%,
-                #05b8ee 25%,
-                #05b8ee 50%,
-                transparent 50%,
-                transparent 55%,
-                #05b8ee 55%,
-                #05b8ee 75%,
-                transparent 75%,
-                transparent 80%,
-                #05b8ee 80%,
-                #05b8ee 100%) 1;
-            transform: translateX(-50%) skewX(-22deg); /* 居中并倾斜22度 */
-            pointer-events: none;                   /* 不响应鼠标事件 */
-        }
-
-        /* 斜线的可交互区域（扩大点击范围） */
-        .extended-slash::after {
-            content: '';                    /* 创建伪元素 */
-            position: absolute;             /* 绝对定位 */
-            left: 50%;                      /* 水平居中 */
-            top: -40px;                     /* 向上偏移 */
-            width: 20px;                    /* 宽度20像素（比视觉宽度大） */
-            height: 60px;                   /* 高度60像素 */
-            transform: translateX(-50%);    /* 居中 */
-            cursor: grab;                   /* 抓取光标 */
-        }
-
-        /* 拖动中的可交互区域 */
-        .extended-slash.dragging::after {
-            cursor: grabbing;               /* 抓取中光标 */
-        }
-
-        /* 斜线悬停效果 */
-        .extended-slash:hover::before {
-            border-image: linear-gradient(180deg,   /* 悬停时变为亮青色 */
-                #17ffcd 0%,
-                #17ffcd 20%,
-                transparent 20%,
-                transparent 25%,
-                #17ffcd 25%,
-                #17ffcd 50%,
-                transparent 50%,
-                transparent 55%,
-                #17ffcd 55%,
-                #17ffcd 75%,
-                transparent 75%,
-                transparent 80%,
-                #17ffcd 80%,
-                #17ffcd 100%) 1;
-            box-shadow: 0 0 3px rgba(23, 255, 205, 0.3); /* 发光效果 */
         }
 
         /* ========== 响应式：小屏幕 ========== */
