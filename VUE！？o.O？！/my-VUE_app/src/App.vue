@@ -1,4 +1,33 @@
 <template>
+    <!-- ========== 背景网格动画 ========== -->
+    <!-- 从中心向四周展开的网格线，像坐标系一样 -->
+    <div class="grid-container">
+        <!-- 中心横线（X轴）：最先出现 -->
+        <div class="grid-line h-grid-line grid-center-h"></div>
+        <!-- 中心竖线（Y轴）：最先出现 -->
+        <div class="grid-line v-grid-line grid-center-v"></div>
+        <!-- 向上展开的横线 -->
+        <div v-for="i in gridCount" :key="'hu'+i" 
+             class="grid-line h-grid-line"
+             :style="{ top: `calc(50% - ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+        </div>
+        <!-- 向下展开的横线 -->
+        <div v-for="i in gridCount" :key="'hd'+i" 
+             class="grid-line h-grid-line"
+             :style="{ top: `calc(50% + ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+        </div>
+        <!-- 向左展开的竖线 -->
+        <div v-for="i in gridCount" :key="'vl'+i" 
+             class="grid-line v-grid-line"
+             :style="{ left: `calc(50% - ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+        </div>
+        <!-- 向右展开的竖线 -->
+        <div v-for="i in gridCount" :key="'vr'+i" 
+             class="grid-line v-grid-line"
+             :style="{ left: `calc(50% + ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+        </div>
+    </div>
+
     <!-- ========== 载入动画 ========== -->
     <!-- 这个div覆盖整个屏幕，载入完成后隐藏 -->
     <div v-if="isLoading" class="loading-screen">
@@ -37,6 +66,7 @@
                 <!-- 头像区域 -->
                 <div class="profile-img-wrapper">
                     <!-- 头像图片：Vue中用import导入+:src绑定 -->
+                    
                     <img :src="avatarImg" alt="LaiY">
                     <!-- SVG装饰折线：左上角 -->
                     <svg class="corner-line corner-line-tl" viewBox="0 0 120 120">
@@ -52,7 +82,7 @@
                     <!-- 名字（会被JS拆分为单个字符） -->
                     <span class="profile-name" ref="nameText">Rr_LaiY</span>
                     <!-- 个人描述 -->
-                    <span class="profile-desc">我喜欢你！</span>
+                    <span class="profile-desc"></span>
                 </div>
             </div>
         </div>
@@ -63,6 +93,12 @@
 </template>
 <script setup lang="ts">
     const isLoading = ref(true)  // 载入状态，初始为true
+
+    // ========================================
+    // 背景网格线数量（足够覆盖超大屏幕）
+    // ========================================
+    // 每条线间隔50px，50条 × 50px × 2方向 = 5000px 覆盖范围
+    const gridCount = 50
 
     // ========================================
     // Vue 3 导入：使用组合式API
@@ -161,8 +197,8 @@
             opacity: 0;
             
             animation: 
-                box-anin 1.25s ease forwards 0.6s,  /* 0.6秒后开始，持续1.75秒 */
-                box-shrink 2s ease-in-out forwards 3.2s ;
+                box-anin 1.25s ease forwards 0.6s,  /* 0.6秒后开始，持续1.25秒 */
+                box-shrink 0.5s ease-in forwards 3.5s ;
         }
         .loading-box-2 {
             position: absolute;
@@ -177,7 +213,7 @@
             right: calc(50% - 7vw - 1px);  
             top: 50%;
             transform: translateY(-50%);
-            animation: box-shrink-2 1.5s ease forwards 4.5s;
+            animation: box-shrink-2 2s ease forwards 3.8s;
         }
         .loading-blink {
             position: absolute;
@@ -241,8 +277,9 @@
             font-family: 'Courier New',monospace;
             letter-spacing: 0.5vw;
             opacity: 0;
-            animation: welcome-appear 1s ease forwards 5s;
+            animation: welcome-appear 1.25s ease forwards 5s;
         }
+
         
         /* ========== 载入动画 ========== */
         @keyframes h-line-anin {
@@ -325,25 +362,25 @@
                 width: 3vw;
                 
                 padding: 0.8vw 3.5vw;
-                transform: translateX(0);
+                /* transform: translateX(0); */
 
 
             }
-            19.9%{
+            50%{
                 opacity: 1; 
                 width: 1px;
                 padding: 0.8vw 0;
-                transform: translateX(7vw);
+                /* transform: translateX(7vw); */
 
             }
-            20% {
+            /* 20% {
                 opacity: 1; 
                 width: 1px;
                 height: 1.6vw;
                 padding: 0;
                 transform: translateX(7vw);
             }
-            /* 竖线变高 */
+            
             40% {
                 opacity: 1; 
                 width: 1px;
@@ -352,20 +389,20 @@
                 transform: translateX(7vw);
                 
             }
-            /* 停留 */
+            
             99% {
                 opacity: 1; 
                 width: 1px;
                 height: 4vw;
                 padding: 0;
                 transform: translateX(7vw);
-            }
+            } */
             
             100% {
                 opacity: 0; 
                 width: 1px;
                 padding: 0;
-                transform: translateX(7vw);
+                /* transform: translateX(7vw); */
             }
         }
         @keyframes box-shrink-2 {
@@ -378,7 +415,7 @@
                 clip-path: inset(0 0 0 0);
 
             }   
-            50% {
+            60% {
                 opacity: 1; 
                 clip-path: inset(0 0 0 0);
 
@@ -395,9 +432,15 @@
         @keyframes welcome-appear{
             0% {
                 opacity: 1;
+                letter-spacing: 0vw;
+            }
+            15% {
+                opacity: 1;
+                letter-spacing: 0vw;
             }
             100% {
                 opacity: 1;
+                letter-spacing: 0.5vw;
                 
             }
         }
@@ -445,6 +488,7 @@
             position: absolute;         /* 绝对定位 */
             width: 150px;               /* 宽度150像素 */
             height: 150px;              /* 高度150像素 */
+            opacity: 0;                 /* 初始不可见 */
         }
 
         /* HUD角落框架的文字标签（使用before伪元素） */
@@ -471,6 +515,9 @@
             left: 20px;                                     /* 距左侧20像素 */
             border-left: 1px solid rgba(255, 255, 255, 0.3);  /* 左边框 */
             border-top: 1px solid rgba(255, 255, 255, 0.3);   /* 上边框 */
+            /* 遮罩动画：从右下角展开 */
+            clip-path: inset(100% 100% 0 0);
+            animation: hud-reveal-tl 0.8s ease forwards 1s;
         }
 
         .hud-corner-tl::before {
@@ -490,6 +537,9 @@
             right: 20px;                                    /* 距右侧20像素 */
             border-right: 1px solid rgba(255, 255, 255, 0.3); /* 右边框 */
             border-top: 1px solid rgba(255, 255, 255, 0.3);   /* 上边框 */
+            /* 遮罩动画：从左下角展开 */
+            clip-path: inset(100% 0 0 100%);
+            animation: hud-reveal-tr 0.8s ease forwards 1s;
         }
 
         .hud-corner-tr::before {
@@ -509,6 +559,9 @@
             left: 20px;                                     /* 距左侧20像素 */
             border-left: 1px solid rgba(255, 255, 255, 0.3);  /* 左边框 */
             border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* 下边框 */
+            /* 遮罩动画：从右上角展开 */
+            clip-path: inset(0 100% 100% 0);
+            animation: hud-reveal-bl 0.8s ease forwards 1s;
         }
 
         .hud-corner-bl::before {
@@ -528,6 +581,9 @@
             right: 20px;                                    /* 距右侧20像素 */
             border-right: 1px solid rgba(255, 255, 255, 0.3); /* 右边框 */
             border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* 下边框 */
+            /* 遮罩动画：从右下角展开 */
+            clip-path: inset(100% 0 0 100%);
+            animation: hud-reveal-br 0.8s ease forwards 1s;
         }
 
         .hud-corner-br::before {
@@ -591,10 +647,15 @@
         /* 头像图片 */
         .profile img {
             width: 100px;               /* 宽度100像素 */
-            height: 100px;              /* 高度100像素 */
+            height: 100px;     
+            z-index: 9;         
             object-fit: contain;        /* 保持图片比例 */
             filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.4)); /* 投影效果 */
             transition: all 0.3s ease;  /* 过渡动画 */
+            /* 初始状态：缩小75%+隐藏，4.6s后还原+淡入 */
+            opacity: 0;
+            transform: scale(0.75);
+            animation: avatar-appear 0.6s ease forwards 3.6s;
         }
 
         /* ========== 头像角落装饰线 ========== */
@@ -607,34 +668,101 @@
             z-index: 10;                /* 层级10，在头像上方 */
         }
 
-        /* 左上角折线 */
-        .corner-line-tl {
-            top: -10px;                 /* 向上偏移10像素 */
-            left: -10px;                /* 向左偏移10像素 */
+        /* SVG polyline 线条延伸动画 */
+        .corner-line polyline {
+            stroke-dasharray: 180;          /* 线条总长度（约60+60=120，留余量） */
+            stroke-dashoffset: 180;         /* 初始完全隐藏 */
+            animation: line-draw 1s ease-out forwards 3s;  
         }
 
-        /* 右下角折线 */
+        /* 左上角折线：初始在头像左上角(0,0)，动画后移到(-10,-10) */
+        .corner-line-tl {
+            top: 0;                     /* 初始在头像左上角 */
+            left: 0;
+            animation: slide-tl 0.5s ease forwards 3.5s;  /* 线延伸完后斜移 */
+        }
+
+        /* 右下角折线：初始在头像右下角，动画后移到(-10,-10)偏移 */
         .corner-line-br {
-            bottom: -10px;              /* 向下偏移10像素 */
-            right: -10px;               /* 向右偏移10像素 */
+            bottom: 0;                  /* 初始在头像右下角 */
+            right: 0;
+            animation: slide-br 0.5s ease forwards 3.5s;  /* 线延伸完后斜移 */
+        }
+
+        /* 线条从无到有的延伸动画 */
+        @keyframes line-draw {
+            0% { stroke-dashoffset: 180; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* 左上角折线斜向移动到最终位置 */
+        @keyframes slide-tl {
+            0% { top: 0; left: 0; }
+            100% { top: -10px; left: -10px; }
+        }
+
+        /* 右下角折线斜向移动到最终位置 */
+        @keyframes slide-br {
+            0% { bottom: 0; right: 0; }
+            100% { bottom: -10px; right: -10px; }
+        }
+
+        /* 头像出现动画：从75%缩放+透明 → 100%+不透明 */
+        @keyframes avatar-appear {
+            0% {
+                opacity: 0;
+                transform: scale(0.75);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* ========== 个人信息文字区域 ========== */
         /* 文字容器 */
         .profile-text {
-            color: rgb(2, 154, 255);            /* 蓝色文字 */
+            color: rgb(2, 154, 255);  
+            z-index: 1;        
             font-size: 32px;                    /* 字体大小 */
             font-weight: bold;                  /* 粗体 */
-            letter-spacing: 3px;                /* 字符间距 */
+            letter-spacing: 3px;              
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* 文字阴影 */
             display: flex;                      /* 弹性布局 */
             flex-direction: column;             /* 纵向排列 */
-            gap: 5px;                           /* 子元素间距5像素 */
+                                       
         }
 
         /* 名字容器 */
         .profile-name {
             display: inline-block;      /* 行内块元素 */
+            z-index: 1;
+            /* 初始：整体向左藏在头像后方 + clip-path裁掉（完全不可见） */
+            transform: translateX(-100%);
+            clip-path: inset(0 100% 0 0);   /* 从右侧裁掉100%，完全隐藏 */
+            animation: name-slide-in 1s ease-out forwards 5s;
+        }
+
+        /* 从头像后方滑出 + clip-path同步揭开 */
+        @keyframes name-slide-in {
+            0% {
+                z-index: 1;
+                transform: translateX(-100%);
+                clip-path: inset(0 0 0 100%);   /* 完全裁掉 */
+                
+            }
+            /* 50% {
+                z-index: 1;
+                transform: translateX(0);
+                clip-path: inset(0 0 0 0);
+                  
+            } */
+            100% {
+                z-index: 1;
+                transform: translateX(0);
+                clip-path: inset(0 0 0 0);
+
+            }
         }
 
         /* 名字中的每个字符（由JS动态生成） */
@@ -686,6 +814,134 @@
             .profile {
                 flex-direction: column;         /* 纵向排列 */
                 align-items: flex-start;        /* 左对齐 */
+            }
+        }
+
+        /* ========== 背景网格线动画 ========== */
+        /* 网格容器：固定在整个屏幕 */
+        .grid-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;       /* 不阻挡鼠标事件 */
+            z-index: 0;                 /* 在所有内容下方 */
+            overflow: hidden;           /* 隐藏超出屏幕的线 */
+        }
+
+        /* 所有网格线的共用样式 */
+        .grid-line {
+            position: absolute;
+            opacity: 0;                 /* 初始不可见 */
+        }
+
+        /* ========== 横线样式 ========== */
+        /* 横线：从中心向左右两端生长 */
+        .h-grid-line {
+            left: 0;
+            width: 100%;
+            height: 1px;
+            z-index: 4;
+            background: rgba(255, 255, 255, 0.03);
+            transform-origin: center center;    /* 从中心开始缩放 */
+            transform: scaleX(0);               /* 初始宽度为0 */
+            animation: grid-h-grow 2s ease forwards;
+        }
+
+        /* 中心横线（X轴）：最先出现 */
+        .grid-center-h {
+            top: 50%;
+            animation-delay: 1.8s;        /* loading动画结束后开始 */
+        }
+
+        /* ========== 竖线样式 ========== */
+        /* 竖线：从中心向上下两端生长 */
+        .v-grid-line {
+            top: 0;
+            height: 100%;
+            width: 1px;
+            z-index: 4;
+            background: rgba(255, 255, 255, 0.03);
+            transform-origin: center center;    /* 从中心开始缩放 */
+            transform: scaleY(0);               /* 初始高度为0 */
+            animation: grid-v-grow 2s ease forwards;
+        }
+
+        /* 中心竖线（Y轴）：最先出现 */
+        .grid-center-v {
+            left: 50%;
+            animation-delay: 1.8s;        /* 和X轴同时出现 */
+        }
+
+        /* ========== 网格线生长动画 ========== */
+        /* 横线：从中心向左右展开 */
+        @keyframes grid-h-grow {
+            0% {
+                opacity: 1;
+                transform: scaleX(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+
+        /* 竖线：从中心向上下展开 */
+        @keyframes grid-v-grow {
+            0% {
+                opacity: 1;
+                transform: scaleY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleY(1);
+            }
+        }
+
+        /* ========== HUD四角遮罩展开动画 ========== */
+        /* 左上角：遮罩从角落（左上）向外展开 */
+        @keyframes hud-reveal-tl {
+            0% {
+                opacity: 1;
+                clip-path: inset(0 100% 100% 0);   /* 完全遮住 */
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);          /* 完全显示 */
+            }
+        }
+
+        /* 右上角：遮罩从角落（右上）向外展开 */
+        @keyframes hud-reveal-tr {
+            0% {
+                opacity: 1;
+                clip-path: inset(0 0 100% 100%);   /* 完全遮住 */
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);          /* 完全显示 */
+            }
+        }
+
+        /* 左下角：遮罩从角落（左下）向外展开 */
+        @keyframes hud-reveal-bl {
+            0% {
+                opacity: 1;
+                clip-path: inset(100% 100% 0 0);   /* 完全遮住 */
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);          /* 完全显示 */
+            }
+        }
+
+        /* 右下角：遮罩从角落（右下）向外展开 */
+        @keyframes hud-reveal-br {
+            0% {
+                opacity: 1;
+                clip-path: inset(100% 0 0 100%);   /* 完全遮住 */
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);          /* 完全显示 */
             }
         }
 </style>

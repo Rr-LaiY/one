@@ -28,18 +28,7 @@ body {
     position: relative;
 }
 
-/* 网格背景装饰 */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: calc(50vw) calc(50vh);
-}
+/* 网格背景装饰：已移至 App.vue 中用 v-for 动态生成，支持逐条动画展开 */
 
 #app {
     width: 100%;
