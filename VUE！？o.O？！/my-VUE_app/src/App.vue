@@ -9,22 +9,22 @@
         <!-- 向上展开的横线 -->
         <div v-for="i in gridCount" :key="'hu'+i" 
              class="grid-line h-grid-line"
-             :style="{ top: `calc(50% - ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+             :style="{ top: `calc(50% - ${i * 50}px)`, animationDelay: `${2.3 + i * 0.1}s,${2.3 + i * 0.1}s` }">
         </div>
         <!-- 向下展开的横线 -->
         <div v-for="i in gridCount" :key="'hd'+i" 
              class="grid-line h-grid-line"
-             :style="{ top: `calc(50% + ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+             :style="{ top: `calc(50% + ${i * 50}px)`, animationDelay: `${2.3 + i * 0.1}s,${2.3 + i * 0.1}s` }">
         </div>
         <!-- 向左展开的竖线 -->
         <div v-for="i in gridCount" :key="'vl'+i" 
              class="grid-line v-grid-line"
-             :style="{ left: `calc(50% - ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+             :style="{ left: `calc(50% - ${i * 50}px)`, animationDelay: `${2.3 + i * 0.1}s,${2.3 + i * 0.1}s` }">
         </div>
         <!-- 向右展开的竖线 -->
         <div v-for="i in gridCount" :key="'vr'+i" 
              class="grid-line v-grid-line"
-             :style="{ left: `calc(50% + ${i * 50}px)`, animationDelay: `${2 + i * 0.1}s` }">
+             :style="{ left: `calc(50% + ${i * 50}px)`, animationDelay: `${2.3 + i * 0.1}s,${2.3 + i * 0.1}s` }">
         </div>
     </div>
 
@@ -740,7 +740,7 @@
             /* 初始：整体向左藏在头像后方 + clip-path裁掉（完全不可见） */
             transform: translateX(-100%);
             clip-path: inset(0 100% 0 0);   /* 从右侧裁掉100%，完全隐藏 */
-            animation: name-slide-in 1s ease-out forwards 5s;
+            animation: name-slide-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards 5s;
         }
 
         /* 从头像后方滑出 + clip-path同步揭开 */
@@ -843,7 +843,8 @@
             background: rgba(255, 255, 255, 0.03);
             transform-origin: center center;    /* 从中心开始缩放 */
             transform: scaleX(0);               /* 初始宽度为0 */
-            animation: grid-h-grow 2s ease forwards;
+            animation: grid-h-grow 2s ease forwards,
+                       grid-flash 2s ease forwards;
         }
 
         /* 中心横线（X轴）：最先出现 */
@@ -862,7 +863,8 @@
             background: rgba(255, 255, 255, 0.03);
             transform-origin: center center;    /* 从中心开始缩放 */
             transform: scaleY(0);               /* 初始高度为0 */
-            animation: grid-v-grow 2s ease forwards;
+            animation: grid-v-grow 2s ease forwards,
+                       grid-flash 2s ease forwards;
         }
 
         /* 中心竖线（Y轴）：最先出现 */
@@ -883,6 +885,21 @@
                 transform: scaleX(1);
             }
         }
+        @keyframes grid-flash {
+            0% {
+        background: rgba(45, 213, 255, 0.5);  /* 最亮：出现瞬间 */
+        box-shadow: 0 0 8px rgba(45, 213, 255, 0.3);  /* 光晕 */
+        } 
+        50%  {
+            background: rgba(45, 213, 255, 0.5);  
+        box-shadow: 0 0 8px rgba(45, 213, 255, 0.3); 
+        } 
+        100% {
+        background: rgba(255, 255, 255, 0.03); /* 恢复正常暗度 */
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0);    /* 光晕消失 */
+        }
+        }
+
 
         /* 竖线：从中心向上下展开 */
         @keyframes grid-v-grow {
